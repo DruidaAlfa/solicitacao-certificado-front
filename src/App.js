@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Logo from "./img/logo.png"
 import Perfil from "./img/p2.png"
+import axios from 'axios';
+
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'; 
 
 function Formulario() {
   const [nome_completo, setnome_completo] = useState('');
@@ -10,20 +14,45 @@ function Formulario() {
   const [data_batismo, setdata_batismo] = useState('');
   const [finalidade, setfinalidade] = useState('');
 
-  const handleSubmit = (event) => {
+  
+  const [mensagem, setMensagem]=useState('');
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Processar os dados do formulário
-    console.log('Nome completo:', nome_completo);
-    console.log('Data de nascimento:', nome_mae);
-    console.log('E-mail:', email);
-    console.log('data_nascimento:', data_nascimento);
-    console.log('data_batismo:', data_batismo);
-    console.log('finalidade:', finalidade);
+    
+    try{
+        const response = await axios.post('https://api.certidaocatolica.com.br/api/v1/pedido/store',{
+          nome_completo: nome_completo,
+          nome_mae: nome_mae,
+          email: email,
+          data_nascimento: data_nascimento,
+          data_batismo: data_batismo,
+          finalidade: finalidade,
+          diocese_id:null,
+          cidade_id:null,
+          paroquia_id:null
+      });
+
+      if (response.status === 200) {
+        setMensagem(response.data.message);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+
+    }catch(error){
+      console.error('Erro:', error);
+      toast.error('Erro ao fazer a solicitação');
+    }
+
   
   };
 
   return (
     <div className="container-fluid">
+      <ToastContainer />
+
       <nav className="navbar">
       <div className="logo">
         <img src={Logo} alt="Certidões Católicas" />
@@ -39,7 +68,7 @@ function Formulario() {
               <h3>Certidão de Batismo</h3>
             </div>
             <div className="card-body">
-              <form onSubmit={handleSubmit}>
+              <form >
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-6">
@@ -106,7 +135,7 @@ function Formulario() {
                 </div>
                 <div class="container">
                 <div class="wrapper">
-                  <a href="#"><span>Solicitar</span></a>
+                  <a href="#" onClick={handleSubmit}><span>Solicitar</span></a>
                 </div>
                 </div>
               </form>
