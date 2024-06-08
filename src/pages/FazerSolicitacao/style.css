@@ -1,8 +1,10 @@
+  
 
-body {
+.fazer-solicitacao {
   font-family: sans-serif;
   background-color: #040b4b;
   font-weight: bold;
+  height: 100vh;
 }
 
 .navbar {
@@ -59,7 +61,7 @@ input[type="submit"] {
   cursor: pointer;
 }
 
-.container {
+.fazer-solicitacao-container {
   width: 100%;
   max-width: 210px;
   margin: 0 auto;
@@ -67,7 +69,7 @@ input[type="submit"] {
 }
 
 
-a{
+.fazer-solicitacao a{
   display: block;
   width: 200px;
   height: 40px;
@@ -83,12 +85,12 @@ a{
   transition: all .35s;
 }
 
-a span{
+.link-fazersolicitacao span{
   position: relative;
   z-index: 2;
 }
 
-a:after{
+.link-fazersolicitacao:after{
   position: absolute;
   content: "";
   top: 0;
@@ -99,10 +101,10 @@ a:after{
   transition: all .35s;
 }
 
-a:hover{
+.link-fazersolicitacao:hover{
   color: #ffffff;
 }
 
-a:hover:after{
+.link-fazersolicitacao:hover:after{
   width: 100%;
 }
