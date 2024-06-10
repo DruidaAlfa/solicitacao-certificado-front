@@ -5,6 +5,7 @@ import axios from 'axios';
 import './style.css'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'; 
+import { Link } from 'react-router-dom';
 
 function FazerSolicitacao() {
   const [nome_completo, setnome_completo] = useState('');
@@ -17,7 +18,7 @@ function FazerSolicitacao() {
   
   const [mensagem, setMensagem]=useState('');
 
-
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     
@@ -59,7 +60,9 @@ function FazerSolicitacao() {
             <img src={Logo} alt="Certidões Católicas" />
         </div>
         <div className="user-actions">
-            <img src={Perfil} alt="Acesso Restrito"  />
+            <Link to="/Login" style={{ border: 'none' }}>
+                <img src={Perfil} alt="Acesso Restrito"  />
+            </Link>
         </div>
         </nav>
         <div className="row justify-content-center">
@@ -118,7 +121,8 @@ function FazerSolicitacao() {
                         <div className="mb-3">
                         <label htmlFor="finalidade" className="form-label">Finalidade</label>
                         <select className="form-select" id="finalidade" value={finalidade} onChange={(e) => setfinalidade(e.target.value)}>
-                            <option value="1">Batismo</option>
+                            <option value=""></option>
+                            <option value="Batismo">Batismo</option>
                         </select>
                         
                         </div>

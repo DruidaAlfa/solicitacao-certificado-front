@@ -10,6 +10,7 @@ export function AppRoutes() {
       <Routes>
         <Route path="/Login" element={<Login />} />
         <Route path="/FazerSolicitacao" element={<FazerSolicitacao />} />
+        <Route path="/" element={<FazerSolicitacao />} />
         <Route path="/Listagem" element={<Listagem />} />
       </Routes>
     </BrowserRouter>
