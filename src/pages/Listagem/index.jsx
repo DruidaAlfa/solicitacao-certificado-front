@@ -5,6 +5,7 @@ import './style.css'
 import http from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 
+import { toast, ToastContainer } from 'react-toastify';
 
 
 function Listagem() {
@@ -12,42 +13,101 @@ function Listagem() {
     const navigate = useNavigate();
     const [logged, setLogged]=useState(false);
     const [isLoading, setLoading] = useState(true)
-    
     const [pedidos,setPedidos]=useState([]);
+    
+
+
 
     const navigaToHome=()=>{
         navigate('/');
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const token = localStorage.getItem('authToken');
-            const response = await http.get('/api/v1/pedido/list-all',{
-                headers: {
-                    Authorization: `Bearer ${token}`
-                  }
-            });
-          setLogged(true);
-          
-          setPedidos(response.data.data)
-          setLoading(false);
-          } catch (error) {
-            if(error.response.status===401){
+    const formatarData = (data) => {
+      const d = new Date(data);
+      const ano = d.getFullYear();
+      const mes = (`0${d.getMonth() + 1}`).slice(-2);
+      const dia = (`0${d.getDate()}`).slice(-2);
+      return `${ano}-${mes}-${dia}`;
+   };
+  
 
-            }
-            console.log(error.response)
-            navigaToHome();
+    const editStatus=(id, newStatus)=>{
+      const updatedPedidos=pedidos.map(pedido =>
+        pedido.id === id ? { ...pedido, status: newStatus } : pedido
+      );
+      setPedidos(updatedPedidos);
+    }
+
+      const enviar=async(pedido)=>{
+      
+          try{
+           
+            const token = localStorage.getItem('authToken');
+            
+              const response = await http.put('/api/v1/pedido/update/'+pedido.id,
+              {
+                nome_completo: pedido.nome_completo,
+                nome_mae: pedido.nome_mae,
+                email: pedido.email,
+                status:pedido.status,
+                data_nascimento: formatarData(pedido.data_nascimento),
+                data_batismo: formatarData(pedido.data_batismo),
+                finalidade: pedido.finalidade,
+                diocese_id:null,
+                cidade_id:null,
+                paroquia_id:null
+              },
+              {
+                headers:{
+                  Authorization: `Bearer ${token}`
+                },
+              });
+              toast.success(response.data.message);
+          }catch(error){
+            
+            let errors=error.response.data.errors;
+            
+            Object.entries(errors).forEach(([key, value]) => { 
+              toast.error(value[0] || 'Erro desconhecido');
+          });
+           
           }
-        };
     
-        fetchData();
-      }, []);
-      useEffect(()=>{console.log(pedidos)},pedidos)
-      if (!logged) {
-        navigaToHome();
-        return '';
       }
+
+      useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const token = localStorage.getItem('authToken');
+              console.log(token)
+              const response = await http.get('/api/v1/pedido/list-all',{
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+              });
+            setLogged(true);
+            
+            setPedidos(response.data.data)
+            setLoading(false);
+            } catch (error) {
+              if(error.response.status===401){
+
+              }
+              console.log(error.response)
+              navigaToHome();
+            }
+          };
+      
+          fetchData();
+        }, []);
+        
+        if (!isLoading) {
+          if(!logged){
+            navigaToHome();
+            return '';
+          }
+          
+        }
 
       
  
@@ -56,6 +116,7 @@ function Listagem() {
 
     
     <div className='listagem'>
+        <ToastContainer />
         <div className="container-fluid">
         <nav className="navbar">
         <div className="logo">
@@ -72,30 +133,32 @@ function Listagem() {
                 <h3>Solicitações</h3>
                 </div>
                 <div className="card-body">
-                <div class="style-tabela">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <div className="style-tabela">
+                <table border="0" cellPadding="0" cellSpacing="0" width="100%">
                 {isLoading &&
+                <thead>
                 <tr>
                   <td colSpan={6}>
                     <p>Carregando...</p>
                   </td>
                 </tr>
+                </thead>
                 }
                     <thead>
                     
                         <tr>
-                        <td class="top center"><i class="icofont-users-alt-4"></i>Id</td>
-                        <td class="top center"><strong>Nome Completo</strong></td>
-                        <td class="top center"><strong>Nome da mãe</strong></td>
-                        <td class="top center"><strong>E-mail</strong></td>
-                        <td class="top center"><strong>Data de Nasc.</strong></td>
-                        <td class="top center"><strong>Data de Batismo</strong></td>
-                        <td class="top center"><strong>Finalidade</strong></td>
-                        <td class="top center"><strong>Status</strong></td>
-                        <td class="top center"><strong>Diocese</strong></td>
-                        <td class="top center"><strong>Cidade</strong></td>
-                        <td class="top center"><strong>Paróquia</strong></td>
-                        <td class="top center" colspan="2" width="1"><strong>Ações</strong></td>
+                        <td className="top center"><i className="icofont-users-alt-4"></i>Id</td>
+                        <td className="top center"><strong>Nome Completo</strong></td>
+                        <td className="top center"><strong>Nome da mãe</strong></td>
+                        <td className="top center"><strong>E-mail</strong></td>
+                        <td className="top center"><strong>Data de Nasc.</strong></td>
+                        <td className="top center"><strong>Data de Batismo</strong></td>
+                        <td className="top center"><strong>Finalidade</strong></td>
+                        <td className="top center"><strong>Status</strong></td>
+                        <td className="top center"><strong>Diocese</strong></td>
+                        <td className="top center"><strong>Cidade</strong></td>
+                        <td className="top center"><strong>Paróquia</strong></td>
+                        <td className="top center" colSpan="3" width="1"><strong>Ações</strong></td>
                         </tr>
                     
                     </thead>
@@ -104,7 +167,7 @@ function Listagem() {
                     {  
                     
                     pedidos.map((pedido)=>(
-                        <tr> 
+                        <tr key={pedido.id}> 
 
                             <td align="center">{pedido.id}</td>
                             <td align="center">{pedido.nome_completo}</td>
@@ -113,12 +176,27 @@ function Listagem() {
                             <td align="center">{pedido.data_nascimento}</td>
                             <td align="center">{pedido.data_batismo}</td>
                             <td align="center">{pedido.finalidade}</td>
-                            <td align="center">{pedido.status}</td>
+                            <td align="center">  
+                              <select name="Status" 
+                              id="appearance-select"
+                              value={pedido.status||'Espera'}
+                              onChange={(e)=>editStatus(pedido.id,e.target.value)}
+                              >
+                                <option value="espera" >Espera</option>
+                                <option value="pagamento pendente">Pag. Pendente</option>
+                                <option value="recusado">Recusado</option>
+                                <option value="aprovado">Aprovado</option>
+                              </select>
+                            </td>
                             <td align="center">{pedido.diocese_id}</td>
                             <td align="center">{pedido.cidade_id}</td>
                             <td align="center">{pedido.paroquia_id}</td>
-                            <td align="center"> <a href="#" class="editar fa fa-fa fa-check-circle" title="Editar">Aprovar</a>  </td>
-                            <td align="center"> <a href="#" class="deletar fa fa-times-circle" title="Deletar">Recusar</a>  </td>
+
+                            <td align="center"> <a href="#" className="editar fa fa-fa fa-check-circle" 
+                                onClick={()=>enviar(pedido)}
+                                title="Editar">Enviar</a>  </td>
+                            <td align="center"> <a href="#" className="editar fa fa-fa fa-check-circle" title="Editar">Aprovar</a>  </td>
+                            <td align="center"> <a href="#" className="deletar fa fa-times-circle" title="Deletar">Recusar</a>  </td>
                     
                         </tr>
 

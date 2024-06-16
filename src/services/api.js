@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const apiUrl="http://localhost:8980";
+console.log(apiUrl);
+
 const http = axios.create({
-    baseURL: 'https://api.certidaocatolica.com.br',
+    baseURL: apiUrl,
     withCredentials: true,
     headers: {
       'X-Requested-With': 'XMLHttpRequest'
