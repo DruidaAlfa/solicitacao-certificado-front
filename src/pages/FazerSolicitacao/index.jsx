@@ -6,6 +6,7 @@ import './style.css'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'; 
 import { Link } from 'react-router-dom';
+import http from '../../services/api';
 
 function FazerSolicitacao() {
   const [nome_completo, setnome_completo] = useState('');
@@ -23,7 +24,7 @@ function FazerSolicitacao() {
     event.preventDefault();
     
     try{
-        const response = await axios.post('https://api.certidaocatolica.com.br/api/v1/pedido/store',{
+        const response = await http.post('/api/v1/pedido/store',{
           nome_completo: nome_completo,
           nome_mae: nome_mae,
           email: email,

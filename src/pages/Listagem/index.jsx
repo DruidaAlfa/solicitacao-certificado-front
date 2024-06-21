@@ -24,10 +24,7 @@ function Listagem() {
 
     const formatarData = (data) => {
       const d = new Date(data);
-      const ano = d.getFullYear();
-      const mes = (`0${d.getMonth() + 1}`).slice(-2);
-      const dia = (`0${d.getDate()}`).slice(-2);
-      return `${ano}-${mes}-${dia}`;
+      return d.toISOString().split('T')[0];
    };
   
 
