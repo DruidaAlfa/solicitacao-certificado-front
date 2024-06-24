@@ -62,11 +62,7 @@ function Listagem() {
               toast.success(response.data.message);
           }catch(error){
             
-            let errors=error.response.data.errors;
-            
-            Object.entries(errors).forEach(([key, value]) => { 
-              toast.error(value[0] || 'Erro desconhecido');
-          });
+            console.log(error)
            
           }
     
@@ -88,10 +84,8 @@ function Listagem() {
             setPedidos(response.data.data)
             setLoading(false);
             } catch (error) {
-              if(error.response.status===401){
-
-              }
-              console.log(error.response)
+             
+              console.log(error)
               navigaToHome();
             }
           };
@@ -195,7 +189,7 @@ function Listagem() {
                                 title="Editar">Enviar</a>  </td>
                             {pedido.status==="aprovado" ?(
                               <td align="center"> 
-                                <Link to="/Upload?id=2">Enviar certidão</Link>
+                                  <Link to={`/Upload?id=${pedido.id}`}>Enviar certidão</Link>
                                </td>
                               ):(
                                 <td></td>
