@@ -3,7 +3,7 @@ import Logo from "../../img/logo.png"
 import Perfil from "../../img/p2.png"
 import './style.css'
 import http from '../../services/api';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -76,8 +76,9 @@ function Listagem() {
           const fetchData = async () => {
             try {
               const token = localStorage.getItem('authToken');
+              const paroquia=localStorage.getItem('paroquia_id');
               console.log(token)
-              const response = await http.get('/api/v1/pedido/list-all',{
+              const response = await http.get('/api/v1/pedido/list/'+paroquia,{
                   headers: {
                       Authorization: `Bearer ${token}`
                     }
@@ -192,7 +193,14 @@ function Listagem() {
                             <td align="center"> <a href="#" className="editar fa fa-fa fa-check-circle" 
                                 onClick={()=>enviar(pedido)}
                                 title="Editar">Enviar</a>  </td>
-                            <td align="center"> <a href="#" className="editar fa fa-fa fa-check-circle" title="Editar">Aprovar</a>  </td>
+                            {pedido.status==="aprovado" ?(
+                              <td align="center"> 
+                                <Link to="/Upload?id=2">Enviar certidão</Link>
+                               </td>
+                              ):(
+                                <td></td>
+                              )}
+                            
                             <td align="center"> <a href="#" className="deletar fa fa-times-circle" title="Deletar">Recusar</a>  </td>
                     
                         </tr>

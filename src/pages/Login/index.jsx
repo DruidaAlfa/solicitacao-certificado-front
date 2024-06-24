@@ -45,9 +45,9 @@ export function Login() {
       })
       
       if(login.status===200){
-        console.log('ok agora entrou');
-        console.log(login.data.data.access_token);
         localStorage.setItem('authToken', login.data.data.access_token);
+        localStorage.setItem('paroquia_id', login.data.data.paroquia_id);
+
         navigaToListagem();
       }
     }

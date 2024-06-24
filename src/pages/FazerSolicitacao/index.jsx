@@ -15,6 +15,7 @@ function FazerSolicitacao() {
   const [data_nascimento, setdata_nascimento] = useState('');
   const [data_batismo, setdata_batismo] = useState('');
   const [finalidade, setfinalidade] = useState('');
+  const [paroquia, setParoquia] = useState('');
 
   
   const [mensagem, setMensagem]=useState('');
@@ -33,7 +34,7 @@ function FazerSolicitacao() {
           finalidade: finalidade,
           diocese_id:null,
           cidade_id:null,
-          paroquia_id:null
+          paroquia_id:paroquia
       });
 
       if (response.status === 200) {
@@ -138,10 +139,21 @@ function FazerSolicitacao() {
                         />
                         </div>
                     </div>
+                    <div>
+                         <div className="mb-3">
+                        <label htmlFor="paroquia" className="form-label">Paroquia</label>
+                        <select className="form-select" id="paroquia" value={paroquia} onChange={(e) => setParoquia(e.target.value)}>
+                            <option value=""></option>
+                            <option value="1">PARÓQUIA N. SRA. DO ROSÁRIO - Rua Niterói, 350, Jardim Vista Alegre, Guaratinguetá SP </option>
+                            <option value="2">PARÓQUIA Nossa Senhora das Dores -  Praça Dom Daniel, 112, Centro, Januária – MG</option>
+                        </select>
+                        
+                        </div>
+                    </div>
                     </div>
                     <div className="fazer-solicitacao-container">
                     <div className="wrapper">
-                    <a href="#" className="link-fazersolicitacao" onClick={handleSubmit}><span>Solicitar</span></a>
+                    <a href="" className="link-fazersolicitacao" onClick={handleSubmit}><span>Solicitar</span></a>
                     </div>
                     </div>
                 </form>
